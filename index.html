@@ -1,126 +1,1120 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>UniPort — цифрове портфоліо студента</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniPort — цифрове портфоліо</title>
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap');
+
+:root{
+  --ink:#26324a; --muted:#8994a8; --blue:#7895e8; --blue-dark:#627fd5;
+  --pale:#f5f6ff; --line:#edf0f7; --lav:#f0edff; --pink:#fff0f5;
+  --mint:#eaf8f2; --peach:#fff4e9; --shadow:0 10px 30px rgba(70,86,130,.07);
+}
+*{box-sizing:border-box}
+body{margin:0;background:#fafaff;color:var(--ink);font-family:'DM Sans',sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0;border-radius:12px;padding:11px 17px;font-size:13px;font-weight:700;transition:.2s}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #cbd7ff;outline-offset:2px}
+.primary{background:linear-gradient(135deg,#8da7f1,#7895e8);color:#fff;box-shadow:0 7px 16px #7895e82b}
+.primary:hover{background:linear-gradient(135deg,#7895e8,#657fd4);transform:translateY(-1px)}
+.secondary{background:#f0f2ff;color:#6c83d2}
+.secondary:hover{background:#e6eaff}
+input,select,textarea{width:100%;padding:12px 14px;margin-top:7px;margin-bottom:15px;border:1px solid #e7eaf2;border-radius:11px;outline:none;background:#fff;color:var(--ink);font-size:13px;transition:.2s}
+input:focus,select:focus,textarea:focus{border-color:#a8b9f2;box-shadow:0 0 0 3px #e9edff}
+label{font-size:12px;font-weight:700;color:#58647b}
+.hidden{display:none!important}
+
+
+.auth-screen{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:24px;background:radial-gradient(circle at 15% 15%,#f0edff 0,transparent 32%),radial-gradient(circle at 85% 85%,#e9f4ff 0,transparent 35%),#fafaff}
+.auth-box{width:100%;max-width:440px;background:#ffffffed;padding:38px;border:1px solid #fff;border-radius:25px;box-shadow:0 18px 55px #7182b51c;backdrop-filter:blur(10px)}
+.logo{color:#7189dc;font:800 29px Manrope,sans-serif;letter-spacing:-1px}
+.auth-box>.logo{display:inline-flex;align-items:center;gap:9px;margin-bottom:10px}
+.auth-box>.logo:before{content:"✿";width:39px;height:39px;display:grid;place-items:center;border-radius:14px;background:#f0edff;color:#8798e6;font-size:22px}
+.auth-box h2{font:800 22px Manrope,sans-serif;margin:22px 0 8px}
+.auth-box p{color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:22px}
+.auth-box button{width:100%;margin-top:5px;padding:13px}
+.auth-switch{text-align:center;margin-top:20px;color:#7189dc;cursor:pointer;font-size:12px;font-weight:700}
+.auth-switch:hover{color:#526fc8}
+.error{color:#d85d78;font-size:12px;margin-bottom:10px;min-height:16px}
+
+ 
+.app{display:flex;min-height:100vh;background:#fafaff}
+.sidebar{width:255px;background:#fff;border-right:1px solid var(--line);position:sticky;top:0;height:100vh;padding:27px 18px;display:flex;flex-direction:column;flex-shrink:0}
+.sidebar>.logo{margin:0 10px 38px;display:flex;align-items:center;gap:9px}
+.sidebar>.logo:before{content:"✿";width:37px;height:37px;border-radius:13px;background:#f0edff;color:#8798e6;display:grid;place-items:center;font-size:20px}
+.nav-button{display:block;width:100%;text-align:left;background:transparent;padding:12px 14px;margin:2px 0;color:#8993a7;border-radius:12px;font-size:13px;font-weight:600}
+.nav-button:hover,.nav-button.active{background:#f0f2ff;color:#7189dc}
+.sidebar hr{border:0;border-top:1px solid var(--line);margin:18px 4px}
+.sidebar .nav-button[onclick="logout()"]{margin-top:auto;color:#d17c91}
+.main{flex:1;padding:0 38px 40px;min-width:0}
+.topbar{height:77px;display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:30px;border-bottom:1px solid var(--line)}
+.topbar h2{font:700 14px Manrope,sans-serif;color:#8994a8}
+.user-name{background:#fff;padding:10px 16px;border:1px solid var(--line);border-radius:30px;font-size:12px;font-weight:700;color:#7189dc;box-shadow:0 3px 12px #7182b50a}
+.page{display:none;max-width:1450px;margin:0 auto}
+.page.active{display:block}
+.page>h2{font:800 24px Manrope,sans-serif;margin:8px 0}
+.page>p{color:var(--muted);font-size:13px;line-height:1.6}
+.welcome{background:linear-gradient(115deg,#e9edff,#f7edff 60%,#fff1f5);color:#34415e;padding:29px 32px;border-radius:21px;margin-bottom:23px;position:relative;overflow:hidden;border:1px solid #fff}
+.welcome:after{content:"✧";position:absolute;right:42px;top:4px;font-size:95px;color:#fff9;transform:rotate(12deg)}
+.welcome h1{font:800 27px Manrope,sans-serif;margin-bottom:9px;position:relative;z-index:1}
+.welcome p{color:#7d88a5;font-size:13px;position:relative;z-index:1}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:22px}
+.stat-card,.card{background:#fff;padding:21px;border-radius:17px;border:1px solid var(--line);box-shadow:var(--shadow)}
+.stat-card{font-size:12px;color:#8792a7;min-height:125px;position:relative}
+.stat-card:nth-child(1):before,.stat-card:nth-child(2):before,.stat-card:nth-child(3):before{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;margin-bottom:12px;font-size:17px}
+.stat-card:nth-child(1):before{content:"▤";background:var(--lav);color:#8877d9}
+.stat-card:nth-child(2):before{content:"✧";background:var(--peach);color:#e2a15c}
+.stat-card:nth-child(3):before{content:"◇";background:var(--mint);color:#55ae8c}
+.stat-card h3{font:800 27px Manrope,sans-serif;margin-top:5px;color:#7189dc}
+.card{margin-bottom:17px}
+.card h3{font:700 15px Manrope,sans-serif;margin-bottom:12px}
+.section-title{font:700 17px Manrope,sans-serif;margin:27px 0 15px}
+.material{background:#fff;padding:19px 21px;border:1px solid var(--line);border-radius:16px;margin-bottom:12px;box-shadow:0 5px 18px #53658b08}
+.material h3{font:700 14px Manrope,sans-serif;margin-bottom:9px;color:#35415a}
+.material p{color:#8792a7;margin:7px 0;font-size:12px;line-height:1.6}
+.badge{display:inline-block;padding:5px 10px;border-radius:20px;background:#f0f2ff;color:#7189dc;font-size:10px;font-weight:700;margin:5px 0}
+.file-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.file-actions button{font-size:11px;padding:9px 13px}
+.empty{padding:36px 20px;text-align:center;background:#fff;color:#9aa4b6;border:1px dashed #dfe4f0;border-radius:15px;font-size:12px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{min-width:0}
+.modal{position:fixed;inset:0;background:#28334d70;display:flex;justify-content:center;align-items:center;padding:15px;z-index:20;backdrop-filter:blur(4px)}
+.modal-content{width:100%;max-width:600px;max-height:90vh;overflow-y:auto;background:#fff;padding:28px;border:1px solid #fff;border-radius:22px;box-shadow:0 20px 60px #1e294333}
+.modal-content h2{font:800 21px Manrope,sans-serif;margin-bottom:20px}
+.modal-content h3{font:700 14px Manrope,sans-serif;margin:13px 0}
+.modal-buttons{display:flex;justify-content:flex-end;gap:10px;margin-top:10px}
+.file-box{padding:13px;background:#f7f8ff;border:1px solid #edf0ff;border-radius:11px;margin-top:10px}
+.certificate-box{background:#fff8ee;border-left:3px solid #efbd7b;padding:13px;margin-top:12px;border-radius:9px}
+hr{border:none;border-top:1px solid var(--line);margin:20px 0}
+#portfolioList{margin-top:18px}
+#portfolioList .material{background:linear-gradient(120deg,#fff,#fbfaff)}
+#portfolio button.secondary{margin-top:15px}
+@media(max-width:991px){.sidebar{width:215px;padding:22px 13px}.main{padding:0 24px 30px}}
+@media(max-width:700px){.app{display:block}.sidebar{position:relative;width:100%;height:auto;padding:13px;display:block;border-right:0;border-bottom:1px solid var(--line)}.sidebar>.logo{margin:0 8px 12px}.nav-button{display:inline-block;width:auto;padding:9px 11px;font-size:11px;margin:2px}.sidebar hr{margin:10px 4px}.main{padding:0 16px 25px}.topbar{height:64px;margin-bottom:22px}.stats{grid-template-columns:1fr}.welcome{padding:23px}.welcome h1{font-size:23px}}
+@media(max-width:480px){.auth-box{padding:27px 22px}.main{padding-left:12px;padding-right:12px}.form-grid{grid-template-columns:1fr}.topbar{align-items:center}.user-name{font-size:10px;padding:8px 11px}.modal-content{padding:21px}.modal-buttons{flex-direction:column-reverse}.modal-buttons button{width:100%}}
+@media print{.sidebar,.topbar,.page:not(#portfolio),#portfolio>button{display:none!important}.app,.main{display:block;margin:0;padding:0;background:#fff}.page#portfolio{display:block!important}.material,.card{box-shadow:none;break-inside:avoid}}
+
+ 
+:root{
+  --ink:#51465f; --muted:#9b91a8; --blue:#a99be9; --blue-dark:#8878d2;
+  --pale:#fbf8ff; --line:#f0e8f5; --lav:#f1eaff; --pink:#ffeaf2;
+  --mint:#e8f8f0; --peach:#fff0e5; --shadow:0 12px 30px rgba(145,119,172,.10);
+}
+*{scrollbar-color:#e5d8f1 #fbf8ff;scrollbar-width:thin}
+body{background:#fffaff;color:var(--ink);font-family:'Nunito',sans-serif;background-image:radial-gradient(#eadff5 1px,transparent 1px);background-size:23px 23px}
+button{border-radius:16px;font-weight:800;letter-spacing:.1px}
+.primary{background:linear-gradient(135deg,#b9aaf4,#f0aeca);box-shadow:0 7px 17px #c4a4e833}
+.primary:hover{background:linear-gradient(135deg,#a997ed,#e99bbc);transform:translateY(-2px);box-shadow:0 10px 20px #c4a4e855}
+.secondary{background:#f4edff;color:#8c79c5;border:1px solid #eee5fb}
+.secondary:hover{background:#fcebf3;color:#bd7d9e}
+input,select,textarea{border:1.5px solid #f0e7f5;border-radius:15px;background:#fffdfd;padding:13px 15px;color:#51465f}
+input:focus,select:focus,textarea:focus{border-color:#c4b2ef;box-shadow:0 0 0 4px #f3edff}
+label{color:#887b98;font-weight:800}
+.auth-screen{position:relative;overflow:hidden;background:linear-gradient(135deg,#fff8fc 0%,#f8f4ff 52%,#f0f8ff 100%)}
+.auth-screen:before,.auth-screen:after{content:'✿';position:absolute;color:#edcde0;opacity:.55;font-size:150px;pointer-events:none}
+.auth-screen:before{left:6%;top:7%;transform:rotate(-18deg)}
+.auth-screen:after{right:7%;bottom:4%;font-size:190px;color:#dcd2f5;transform:rotate(15deg)}
+.auth-box{position:relative;z-index:1;max-width:455px;padding:42px 40px;background:rgba(255,255,255,.92);border:2px solid #fff;border-radius:34px;box-shadow:0 22px 65px rgba(174,145,193,.19)}
+.auth-box:after{content:'♡  ✧  ♡';display:block;text-align:center;margin-top:18px;color:#d6a9c4;font-size:13px;letter-spacing:7px}
+.logo{font-family:'Quicksand',sans-serif;color:#9b87d5;font-weight:700;letter-spacing:-1.2px}
+.auth-box>.logo:before,.sidebar>.logo:before{content:'🌷';background:#fff0f6;color:inherit;border-radius:15px;box-shadow:inset 0 0 0 1px #f8e3ee}
+.auth-box h2{font-family:'Quicksand',sans-serif;color:#655675;font-size:25px;font-weight:700}
+.auth-box p{color:#a095ac;font-size:14px}
+.auth-switch{color:#a184d0}
+.error{color:#d8759a}
+.app{background:rgba(255,250,255,.88)}
+.sidebar{background:rgba(255,255,255,.94);border-right:1px solid #f0e7f5;padding:25px 17px;box-shadow:8px 0 28px rgba(171,145,190,.045)}
+.sidebar>.logo{font-family:'Quicksand',sans-serif;margin:0 10px 34px;color:#9b87d5;font-size:29px}
+.nav-button{color:#988da5;border-radius:15px;padding:13px 14px;margin:4px 0;font-size:13px;font-weight:800;transition:all .22s ease}
+.nav-button:hover{background:#fff2f7;color:#c17f9f;transform:translateX(3px)}
+.nav-button.active{background:linear-gradient(100deg,#f0eaff,#fff0f6);color:#927bc9;box-shadow:inset 3px 0 #c4a8ed}
+.sidebar hr{border-top:1px dashed #eadfed}
+.sidebar .nav-button[onclick="logout()"]{color:#d18ba7}
+.main{padding:0 40px 45px}
+.topbar{border-bottom:1px dashed #eadfed;margin-bottom:30px}
+.topbar h2{font-family:'Quicksand',sans-serif;color:#9b8da7;font-size:15px;font-weight:700}
+.user-name{background:linear-gradient(110deg,#fff0f6,#f2edff);border:1px solid #f1e5f1;color:#987fc5;border-radius:30px;padding:10px 17px;box-shadow:0 5px 14px #d9c5e31c}
+.page>h2,.section-title{font-family:'Quicksand',sans-serif;color:#655675;font-weight:700}
+.page>h2{font-size:27px}
+.page>p{color:#9b91a8}
+.welcome{background:linear-gradient(115deg,#f4eaff 0%,#ffeef5 55%,#edf6ff 100%);border:2px solid #fff;padding:32px 34px;border-radius:28px;margin-bottom:24px;box-shadow:0 10px 28px rgba(191,160,207,.12)}
+.welcome:after{content:'🌸';right:35px;top:12px;font-size:76px;opacity:.72;transform:rotate(12deg)}
+.welcome:before{content:'✧';position:absolute;right:135px;top:15px;font-size:35px;color:#fff}
+.welcome h1{font-family:'Quicksand',sans-serif;font-size:29px;color:#685879;font-weight:700}
+.welcome p{color:#9a8da7;font-size:14px}
+.stats{gap:18px}
+.stat-card,.card{border:1.5px solid #f2eaf5;border-radius:23px;background:rgba(255,255,255,.96);box-shadow:var(--shadow)}
+.stat-card{padding:22px;min-height:137px;color:#9b91a8;font-weight:800}
+.stat-card:nth-child(1):before{content:'📚';background:#f2eaff;color:#a18bd4;border-radius:13px}
+.stat-card:nth-child(2):before{content:'🎀';background:#fff0f5;color:#d68eae;border-radius:13px}
+.stat-card:nth-child(3):before{content:'🌱';background:#eaf8f0;color:#70b79a;border-radius:13px}
+.stat-card h3{font-family:'Quicksand',sans-serif;color:#a18bd4;font-size:31px;font-weight:800}
+.card{padding:23px}
+.card h3,.material h3{font-family:'Quicksand',sans-serif;color:#6b5b7a;font-weight:700}
+.material{background:rgba(255,255,255,.97);border:1.5px solid #f1e8f4;border-radius:20px;padding:21px 23px;box-shadow:0 7px 20px rgba(166,139,181,.07);transition:transform .2s,box-shadow .2s}
+.material:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(166,139,181,.13)}
+.material h3{font-size:15px}
+.material p{color:#9b91a8;font-size:13px}
+.badge{background:#f2ecff;color:#947ecb;border:1px solid #eee5fa;border-radius:30px;font-size:10px;padding:6px 11px}
+.empty{background:linear-gradient(135deg,#fff,#fff8fc);border:2px dashed #eadced;border-radius:22px;color:#aa9db2;padding:42px 20px}
+.empty:before{content:'♡';display:block;font-size:27px;color:#d8b3ca;margin-bottom:8px}
+.modal{background:rgba(86,67,100,.35);backdrop-filter:blur(7px)}
+.modal-content{border:2px solid #fff;border-radius:28px;box-shadow:0 25px 70px rgba(83,58,99,.22)}
+.modal-content h2,.modal-content h3{font-family:'Quicksand',sans-serif;color:#665675;font-weight:700}
+.file-box{background:#faf6ff;border:1px solid #eee5fa;border-radius:15px}
+.certificate-box{background:#fff7ef;border-left:4px solid #efc18c;border-radius:13px}
+hr{border-top:1px dashed #eadfed}
+#portfolioList .material{background:linear-gradient(120deg,#fff,#fff8fc)}
+button:active{transform:scale(.98)}
+@media(max-width:700px){
+ body{background-size:18px 18px}
+ .sidebar{background:#fffaff;box-shadow:0 5px 20px rgba(171,145,190,.06)}
+ .nav-button{background:#fff;border:1px solid #f2eaf5}
+ .nav-button.active{border-color:#e8dcf7}
+ .main{padding:0 15px 28px}
+ .welcome{border-radius:22px;padding:24px}
+ .welcome:after{right:15px;font-size:52px}
+ .welcome h1{font-size:23px;max-width:78%}
+ .auth-box{padding:32px 23px;border-radius:27px}
+}
+@media(prefers-reduced-motion:no-preference){.auth-box,.welcome,.stat-card{animation:softPop .55s ease both}@keyframes softPop{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}}
+
+</style>
 </head>
+
 <body>
-  <div class="app-shell">
-    <aside class="sidebar" id="sidebar">
-      <a class="brand" href="#" data-page="dashboard"><span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span> UniPort</a>
-      <div class="side-label">МЕНЮ</div>
-      <nav class="nav flex-column">
-        <a class="nav-link active" href="#" data-page="dashboard"><i class="bi bi-grid-1x2"></i> Огляд</a>
-        <a class="nav-link" href="#" data-page="works"><i class="bi bi-folder2-open"></i> Мої роботи</a>
-        <a class="nav-link" href="#" data-page="certificates"><i class="bi bi-award"></i> Сертифікати</a>
-        <a class="nav-link" href="#" data-page="projects"><i class="bi bi-lightbulb"></i> Проєкти та досвід</a>
-        <a class="nav-link" href="#" data-page="portfolio"><i class="bi bi-person-vcard"></i> Моє портфоліо</a>
-      </nav>
-      <div class="sidebar-bottom">
-        <div class="storage-card">
-          <div class="storage-icon"><i class="bi bi-cloud-check"></i></div>
-          <strong>Твій цифровий архів</strong>
-          <p>Усі досягнення — в одному місці.</p>
+
+ 
+
+<div id="registerScreen" class="auth-screen">
+    <div class="auth-box">
+        <div class="logo">UniPort</div>
+        <p>Твій шлях до професії в одному портфоліо.</p>
+
+        <h2>Створення акаунта</h2>
+
+        <div id="registerError" class="error"></div>
+
+        <form id="registerForm">
+            <label>Ім'я</label>
+            <input id="regName" required placeholder="Введіть ім'я">
+
+            <label>Прізвище</label>
+            <input id="regSurname" required placeholder="Введіть прізвище">
+
+            <label>Пароль</label>
+            <input id="regPassword" type="password" required minlength="8"
+                   placeholder="Мінімум 8 символів">
+
+            <label>Підтвердження пароля</label>
+            <input id="regConfirm" type="password" required
+                   placeholder="Повторіть пароль">
+
+            <button class="primary" type="submit">Зареєструватися</button>
+        </form>
+
+        <div class="auth-switch" onclick="showLogin()">
+            Уже маєте акаунт? Увійти
         </div>
-        <div class="profile-mini">
-          <div class="avatar">АГ</div>
-          <div><strong>Анастасія Гордієнко</strong><small>Курсант · 2 курс</small></div>
-          <i class="bi bi-three-dots"></i>
+    </div>
+</div>
+
+ 
+
+<div id="loginScreen" class="auth-screen hidden">
+    <div class="auth-box">
+        <div class="logo">UniPort</div>
+        <h2>Вхід до акаунта</h2>
+        <p>Продовжуйте формувати своє цифрове портфоліо.</p>
+
+        <div id="loginError" class="error"></div>
+
+        <form id="loginForm">
+            <label>Прізвище</label>
+            <input id="loginSurname" required placeholder="Введіть прізвище">
+
+            <label>Пароль</label>
+            <input id="loginPassword" type="password" required
+                   placeholder="Введіть пароль">
+
+            <button class="primary" type="submit">Увійти</button>
+        </form>
+
+        <div class="auth-switch" onclick="showRegister()">
+            Ще не маєте акаунта? Зареєструватися
         </div>
-      </div>
+    </div>
+</div>
+
+ 
+
+<div id="application" class="app hidden">
+
+    <aside class="sidebar">
+        <div class="logo">UniPort</div>
+
+        <button class="nav-button active" data-page="home">⌂ Головна</button>
+        <button class="nav-button" data-page="works">▤ Мої роботи</button>
+        <button class="nav-button" data-page="science">✎ Наукова діяльність</button>
+        <button class="nav-button" data-page="certificates">▣ Сертифікати</button>
+        <button class="nav-button" data-page="projects">◇ Проєкти та практика</button>
+        <button class="nav-button" data-page="portfolio">▧ Моє портфоліо</button>
+        <button class="nav-button" data-page="settings">⚙ Налаштування</button>
+
+        <hr>
+
+        <button class="nav-button" onclick="logout()">↪ Вийти</button>
     </aside>
 
-    <main class="main-area">
-      <header class="topbar">
-        <button class="btn btn-light d-lg-none" id="menuToggle"><i class="bi bi-list"></i></button>
-        <div class="breadcrumb-text">Особистий кабінет <span>/</span> <b id="pageCrumb">Огляд</b></div>
-        <div class="top-actions">
-          <button class="icon-button" title="Сповіщення"><i class="bi bi-bell"></i></button>
-          <div class="avatar">АГ</div>
-        </div>
-      </header>
+    <main class="main">
 
-      <section class="content">
-        <div id="dashboardPage" class="page-section">
-          <div class="welcome-row">
-            <div>
-              <div class="eyebrow">П'ЯТНИЦЯ, 30 ЖОВТНЯ 2026</div>
-              <h1>Привіт, Анастасіє! <span>✦</span></h1>
-              <p class="muted">Твій академічний шлях зібраний в одному місці. Продовжуй наповнювати портфоліо!</p>
+        <div class="topbar">
+            <h2 id="pageTitle">Головна</h2>
+            <div class="user-name" id="headerName"></div>
+        </div>
+
+         
+
+        <section id="home" class="page active">
+
+            <div class="welcome">
+                <h1 id="welcomeName">Вітаємо!</h1>
+                <p>Твій академічний шлях зберігається в одному місці.</p>
             </div>
-            <button class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addModal"><i class="bi bi-plus-lg me-2"></i>Додати матеріал</button>
-          </div>
 
-          <div class="row g-3 stats-row">
-            <div class="col-6 col-xl-3"><div class="stat-card"><div class="stat-icon purple"><i class="bi bi-folder2"></i></div><div class="stat-number" id="workCount">3</div><div class="stat-caption">Навчальні роботи</div><small><i class="bi bi-arrow-up-right"></i> Твоя база знань</small></div></div>
-            <div class="col-6 col-xl-3"><div class="stat-card"><div class="stat-icon orange"><i class="bi bi-award"></i></div><div class="stat-number" id="certCount">2</div><div class="stat-caption">Сертифікати</div><small>Підтверджені досягнення</small></div></div>
-            <div class="col-6 col-xl-3"><div class="stat-card"><div class="stat-icon blue"><i class="bi bi-lightbulb"></i></div><div class="stat-number" id="projectCount">1</div><div class="stat-caption">Проєкти</div><small>Практичний досвід</small></div></div>
-            <div class="col-6 col-xl-3"><div class="stat-card"><div class="stat-icon green"><i class="bi bi-graph-up-arrow"></i></div><div class="stat-number">78%</div><div class="stat-caption">Заповненість профілю</div><small>Гарний початок!</small></div></div>
-          </div>
+            <div class="stats">
+                <div class="stat-card">
+                    Навчальні роботи
+                    <h3 id="worksCount">0</h3>
+                </div>
 
-          <div class="row g-4 mt-1">
-            <div class="col-lg-8">
-              <div class="panel">
-                <div class="panel-heading"><div><h2>Нещодавні матеріали</h2><p>Останнє, що ти додала до UniPort</p></div><a href="#" data-page="works">Усі матеріали <i class="bi bi-arrow-right"></i></a></div>
-                <div id="recentList" class="material-list"></div>
-              </div>
+                <div class="stat-card">
+                    Сертифікати
+                    <h3 id="certCount">0</h3>
+                </div>
+
+                <div class="stat-card">
+                    Проєкти
+                    <h3 id="projectsCount">0</h3>
+                </div>
             </div>
-            <div class="col-lg-4">
-              <div class="panel portfolio-promo">
-                <div class="promo-art"><div class="mini-window"><div class="mini-line"></div><div class="mini-line short"></div><div class="mini-chip"></div></div><i class="bi bi-stars"></i></div>
-                <div class="eyebrow mt-3">ТВОЇ МОЖЛИВОСТІ</div>
-                <h2>Портфоліо, яким можна поділитися</h2>
-                <p>Збери свої досягнення та покажи роботодавцю одним посиланням.</p>
-                <button class="btn btn-outline-primary w-100 rounded-pill" data-page="portfolio">Переглянути портфоліо</button>
-              </div>
+
+            <button class="primary" onclick="openModal()">
+                + Додати матеріал
+            </button>
+
+            <h2 class="section-title">Останні матеріали</h2>
+            <div id="recentMaterials"></div>
+
+        </section>
+
+         
+
+        <section id="works" class="page">
+            <h2>Мої навчальні роботи</h2>
+            <p>Курсові, лабораторні, реферати та практичні роботи.</p>
+            <br>
+            <button class="primary" onclick="openModal('Робота')">
+                + Додати роботу
+            </button>
+            <div id="worksList"></div>
+        </section>
+
+         
+
+        <section id="science" class="page">
+            <h2>Наукова діяльність</h2>
+            <p>Тези, статті та участь у конференціях.</p>
+            <br>
+            <button class="primary" onclick="openModal('Наукова діяльність')">
+                + Додати наукову роботу
+            </button>
+            <div id="scienceList"></div>
+        </section>
+
+        
+
+        <section id="certificates" class="page">
+            <h2>Мої сертифікати</h2>
+            <p>Сертифікати курсів, навчань та інших заходів.</p>
+            <br>
+            <button class="primary" onclick="openModal('Сертифікат')">
+                + Додати сертифікат
+            </button>
+            <div id="certificatesList"></div>
+        </section>
+
+         
+
+        <section id="projects" class="page">
+            <h2>Проєкти та практика</h2>
+            <p>Твої розробки, дослідження та практичний досвід.</p>
+            <br>
+            <button class="primary" onclick="openModal('Проєкт')">
+                + Додати проєкт
+            </button>
+            <div id="projectsList"></div>
+        </section>
+
+       
+
+        <section id="portfolio" class="page">
+            <h2>Моє цифрове портфоліо</h2>
+            <p>Тут автоматично зібрані твої академічні досягнення.</p>
+            <br>
+            <button class="secondary" onclick="window.print()">
+                Друкувати / Зберегти PDF
+            </button>
+            <div id="portfolioList"></div>
+        </section>
+
+         
+
+        <section id="settings" class="page">
+            <h2>Налаштування профілю</h2>
+
+            <div class="card">
+                <form id="profileForm">
+                    <label>Ім'я</label>
+                    <input id="profileName" required>
+
+                    <label>Прізвище</label>
+                    <input id="profileSurname" required>
+
+                    <button class="primary">Зберегти зміни</button>
+                </form>
             </div>
-          </div>
-        </div>
 
-        <div id="worksPage" class="page-section d-none">
-          <div class="page-title-row"><div><div class="eyebrow">ТВОЯ БАЗА ЗНАНЬ</div><h1>Мої роботи</h1><p class="muted">Зберігай навчальні та наукові матеріали.</p></div><button class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#addModal"><i class="bi bi-plus-lg me-2"></i>Додати роботу</button></div>
-          <div class="panel"><div class="filter-row"><div class="search-box"><i class="bi bi-search"></i><input id="searchInput" class="form-control" placeholder="Пошук матеріалів..."></div><select id="typeFilter" class="form-select"><option value="all">Усі типи</option><option value="Робота">Навчальні роботи</option><option value="Сертифікат">Сертифікати</option><option value="Проєкт">Проєкти</option></select></div><div id="allMaterials" class="material-list"></div></div>
-        </div>
+            <div class="card">
+                <h3>Зміна пароля</h3>
 
-        <div id="certificatesPage" class="page-section d-none">
-          <div class="page-title-row"><div><div class="eyebrow">ТВОЇ ДОСЯГНЕННЯ</div><h1>Сертифікати</h1><p class="muted">Курси, тренінги, конференції та практики.</p></div><button class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#addModal" data-default-type="Сертифікат"><i class="bi bi-plus-lg me-2"></i>Додати сертифікат</button></div>
-          <div id="certificateGrid" class="row g-3"></div>
-        </div>
+                <form id="passwordForm">
+                    <label>Старий пароль</label>
+                    <input id="oldPassword" type="password" required>
 
-        <div id="projectsPage" class="page-section d-none">
-          <div class="page-title-row"><div><div class="eyebrow">ПРАКТИЧНИЙ ДОСВІД</div><h1>Проєкти та досвід</h1><p class="muted">Показуй, що ти створила, дослідила або реалізувала.</p></div><button class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#addModal" data-default-type="Проєкт"><i class="bi bi-plus-lg me-2"></i>Додати проєкт</button></div>
-          <div id="projectGrid" class="row g-3"></div>
-        </div>
+                    <label>Новий пароль</label>
+                    <input id="newPassword" type="password" required minlength="8">
 
-        <div id="portfolioPage" class="page-section d-none">
-          <div class="page-title-row"><div><div class="eyebrow">ПУБЛІЧНА ВЕРСІЯ</div><h1>Моє портфоліо</h1><p class="muted">Так твої досягнення можуть побачити інші.</p></div><button class="btn btn-primary rounded-pill" id="shareBtn"><i class="bi bi-link-45deg me-2"></i>Скопіювати посилання</button></div>
-          <div class="portfolio-preview">
-            <div class="portfolio-cover"><div class="avatar avatar-large">АГ</div><div><span class="portfolio-tag">STUDENT PORTFOLIO</span><h2>Анастасія Гордієнко</h2><p>Комп'ютерні науки · 1 курс</p></div></div>
-            <div class="portfolio-body"><h3>Про мене</h3><p class="muted">Студентка, яка розвиває свої знання, працює над навчальними завданнями та створює власні проєкти.</p><div class="row g-3 mt-2"><div class="col-4"><div class="portfolio-count"><b id="portfolioWorkCount">3</b><span>Роботи</span></div></div><div class="col-4"><div class="portfolio-count"><b id="portfolioCertCount">2</b><span>Сертифікати</span></div></div><div class="col-4"><div class="portfolio-count"><b id="portfolioProjectCount">1</b><span>Проєкти</span></div></div></div><hr><h3>Вибрані матеріали</h3><div id="portfolioItems" class="material-list"></div></div>
-          </div>
-          <div class="demo-note"><i class="bi bi-info-circle me-2"></i>Це демонстраційний прототип. Посилання для роботодавця поки працює лише як приклад.</div>
-        </div>
-      </section>
+                    <button class="primary">Змінити пароль</button>
+                </form>
+            </div>
+        </section>
+
     </main>
-  </div>
+</div>
 
-  <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered"><div class="modal-content">
-      <div class="modal-header border-0"><div><div class="eyebrow">ПОПОВНИ СВОЄ ПОРТФОЛІО</div><h5 class="modal-title">Додати матеріал</h5></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-      <form id="addForm"><div class="modal-body pt-0">
-        <label class="form-label">Назва</label><input class="form-control mb-3" id="itemTitle" required placeholder="Наприклад, Курсова робота з програмування">
-        <label class="form-label">Тип матеріалу</label><select class="form-select mb-3" id="itemType"><option>Робота</option><option>Сертифікат</option><option>Проєкт</option></select>
-        <label class="form-label">Короткий опис</label><textarea class="form-control mb-3" id="itemDescription" rows="3" placeholder="Кілька слів про матеріал..."></textarea>
-        <label class="form-label">Файл (необов'язково)</label><input class="form-control" type="file" id="itemFile"><div class="form-text">У прототипі назва файлу зберігається локально у браузері.</div>
-      </div><div class="modal-footer border-0"><button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Скасувати</button><button class="btn btn-primary rounded-pill px-4" type="submit">Зберегти матеріал</button></div></form>
-    </div></div>
-  </div>
-  <div class="toast-container position-fixed bottom-0 end-0 p-3"><div id="appToast" class="toast" role="alert"><div class="toast-body"><i class="bi bi-check-circle-fill text-success me-2"></i><span id="toastMessage">Готово!</span></div></div></div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="app.js"></script>
+ 
+
+<div id="materialModal" class="modal hidden">
+    <div class="modal-content">
+
+        <h2>Додавання матеріалу</h2>
+
+        <form id="materialForm">
+
+            <label>Назва</label>
+            <input id="itemTitle" required placeholder="Назва роботи">
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Категорія</label>
+                    <select id="itemType" required>
+                        <option value="Робота">Навчальна робота</option>
+                        <option value="Наукова діяльність">Наукова діяльність</option>
+                        <option value="Сертифікат">Сертифікат</option>
+                        <option value="Проєкт">Проєкт</option>
+                        <option value="Практика">Практика</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Дата</label>
+                    <input id="itemDate" type="date">
+                </div>
+            </div>
+
+            <div id="scienceFields" class="hidden">
+                <hr>
+                <h3>Дані конференції</h3>
+
+                <label>Назва конференції</label>
+                <input id="conferenceName">
+
+                <label>Секція</label>
+                <input id="conferenceSection">
+
+                <label>Сертифікат учасника (можна додати одразу)</label>
+                <input id="attachedCertificate" type="file"
+                       accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+            </div>
+
+            <label>Опис</label>
+            <textarea id="itemDescription" rows="3"
+                      placeholder="Короткий опис матеріалу"></textarea>
+
+            <label>Файл роботи</label>
+            <input id="itemFile" type="file"
+                   accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png,.txt">
+
+            <div class="modal-buttons">
+                <button type="button" class="secondary" onclick="closeModal()">
+                    Скасувати
+                </button>
+
+                <button type="submit" class="primary">
+                    Зберегти
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script>
+
+ 
+
+const DB_NAME = "UniPortDatabase";
+const DB_VERSION = 1;
+
+let db;
+let currentUser = null;
+let currentPage = "home";
+
+const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+request.onupgradeneeded = function(event) {
+    const database = event.target.result;
+
+    if (!database.objectStoreNames.contains("users")) {
+        database.createObjectStore("users", { keyPath: "id" });
+    }
+
+    if (!database.objectStoreNames.contains("materials")) {
+        const store = database.createObjectStore("materials", {
+            keyPath: "id"
+        });
+
+        store.createIndex("userId", "userId", { unique: false });
+    }
+};
+
+request.onsuccess = function(event) {
+    db = event.target.result;
+    checkSession();
+};
+
+request.onerror = function() {
+    alert("Не вдалося відкрити базу даних.");
+};
+
+ 
+
+function dbRequest(storeName, mode, action) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(storeName, mode);
+        const store = transaction.objectStore(storeName);
+
+        const result = action(store);
+
+        result.onsuccess = () => resolve(result.result);
+        result.onerror = () => reject(result.error);
+    });
+}
+
+function getAll(storeName) {
+    return dbRequest(storeName, "readonly", store => store.getAll());
+}
+
+function saveRecord(storeName, record) {
+    return dbRequest(storeName, "readwrite", store => store.put(record));
+}
+
+function deleteRecord(storeName, id) {
+    return dbRequest(storeName, "readwrite", store => store.delete(id));
+}
+
+ 
+
+async function hashPassword(password) {
+    const data = new TextEncoder().encode(password);
+
+    const hash = await crypto.subtle.digest("SHA-256", data);
+
+    return Array.from(new Uint8Array(hash))
+        .map(byte => byte.toString(16).padStart(2, "0"))
+        .join("");
+}
+
+ 
+
+function showRegister() {
+    registerScreen.classList.remove("hidden");
+    loginScreen.classList.add("hidden");
+    application.classList.add("hidden");
+}
+
+function showLogin() {
+    registerScreen.classList.add("hidden");
+    loginScreen.classList.remove("hidden");
+    application.classList.add("hidden");
+}
+
+ 
+
+registerForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const name = regName.value.trim();
+    const surname = regSurname.value.trim();
+    const password = regPassword.value;
+    const confirm = regConfirm.value;
+
+    registerError.textContent = "";
+
+    if (password.length < 8) {
+        registerError.textContent = "Пароль має містити мінімум 8 символів.";
+        return;
+    }
+
+    if (password !== confirm) {
+        registerError.textContent = "Паролі не збігаються.";
+        return;
+    }
+
+    const users = await getAll("users");
+
+    const exists = users.some(user =>
+        user.surname.toLowerCase() === surname.toLowerCase()
+    );
+
+    if (exists) {
+        registerError.textContent = "Таке прізвище вже зареєстроване. Зверніться до адміністратора або використайте інший логін.";
+        return;
+    }
+
+    const user = {
+        id: crypto.randomUUID(),
+        name,
+        surname,
+        password: await hashPassword(password),
+        createdAt: new Date().toISOString()
+    };
+
+    await saveRecord("users", user);
+
+    alert("Реєстрація успішна! Тепер увійдіть у свій акаунт.");
+
+    registerForm.reset();
+    showLogin();
+});
+
+ 
+
+loginForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const surname = loginSurname.value.trim();
+    const password = await hashPassword(loginPassword.value);
+
+    const users = await getAll("users");
+
+    const user = users.find(u =>
+        u.surname.toLowerCase() === surname.toLowerCase() &&
+        u.password === password
+    );
+
+    if (!user) {
+        loginError.textContent = "Неправильне прізвище або пароль.";
+        return;
+    }
+
+    currentUser = user;
+
+    localStorage.setItem("uniportSession", user.id);
+
+    loginForm.reset();
+
+    openApplication();
+});
+
+ 
+
+async function checkSession() {
+    const sessionId = localStorage.getItem("uniportSession");
+
+    if (!sessionId) {
+        showRegister();
+        return;
+    }
+
+    const users = await getAll("users");
+
+    const user = users.find(u => u.id === sessionId);
+
+    if (!user) {
+        localStorage.removeItem("uniportSession");
+        showRegister();
+        return;
+    }
+
+    currentUser = user;
+    openApplication();
+}
+
+ 
+
+function openApplication() {
+    registerScreen.classList.add("hidden");
+    loginScreen.classList.add("hidden");
+    application.classList.remove("hidden");
+
+    updateUserInfo();
+    renderAll();
+}
+
+function updateUserInfo() {
+    welcomeName.textContent = `Вітаємо, ${currentUser.name}!`;
+    headerName.textContent =
+        `${currentUser.name} ${currentUser.surname}`;
+
+    profileName.value = currentUser.name;
+    profileSurname.value = currentUser.surname;
+}
+
+ 
+
+function logout() {
+    localStorage.removeItem("uniportSession");
+    currentUser = null;
+    showLogin();
+}
+
+ 
+
+document.querySelectorAll(".nav-button[data-page]").forEach(button => {
+    button.addEventListener("click", () => {
+        openPage(button.dataset.page);
+    });
+});
+
+function openPage(page) {
+    currentPage = page;
+
+    document.querySelectorAll(".page").forEach(element => {
+        element.classList.remove("active");
+    });
+
+    document.getElementById(page).classList.add("active");
+
+    document.querySelectorAll(".nav-button[data-page]").forEach(button => {
+        button.classList.toggle(
+            "active",
+            button.dataset.page === page
+        );
+    });
+
+    const titles = {
+        home: "Головна",
+        works: "Мої роботи",
+        science: "Наукова діяльність",
+        certificates: "Сертифікати",
+        projects: "Проєкти та практика",
+        portfolio: "Моє портфоліо",
+        settings: "Налаштування"
+    };
+
+    pageTitle.textContent = titles[page];
+    renderAll();
+}
+ 
+
+function openModal(type) {
+    materialForm.reset();
+
+    itemDate.value = new Date().toISOString().slice(0, 10);
+
+    if (type) {
+        itemType.value = type;
+    }
+
+    updateScienceFields();
+
+    materialModal.classList.remove("hidden");
+}
+
+function closeModal() {
+    materialModal.classList.add("hidden");
+}
+
+itemType.addEventListener("change", updateScienceFields);
+
+function updateScienceFields() {
+    scienceFields.classList.toggle(
+        "hidden",
+        itemType.value !== "Наукова діяльність"
+    );
+}
+
+ 
+
+materialForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const file = itemFile.files[0] || null;
+    const certificate = attachedCertificate.files[0] || null;
+
+    const material = {
+        id: crypto.randomUUID(),
+        userId: currentUser.id,
+
+        title: itemTitle.value.trim(),
+        type: itemType.value,
+        date: itemDate.value || new Date().toISOString().slice(0, 10),
+        description: itemDescription.value.trim(),
+
+        file,
+        fileName: file ? file.name : "",
+
+        conference: conferenceName.value.trim(),
+        section: conferenceSection.value.trim(),
+
+        certificate,
+        certificateName: certificate ? certificate.name : "",
+
+        createdAt: new Date().toISOString()
+    };
+
+    try {
+        await saveRecord("materials", material);
+
+        closeModal();
+        renderAll();
+
+        alert("Матеріал успішно збережено!");
+    } catch (error) {
+        alert("Помилка збереження. Перевірте розмір файлів.");
+        console.error(error);
+    }
+});
+
+ 
+
+async function getUserMaterials() {
+    const all = await getAll("materials");
+
+    return all.filter(item => item.userId === currentUser.id)
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+ 
+
+function openFile(file) {
+    if (!file) {
+        alert("Файл відсутній.");
+        return;
+    }
+
+    const url = URL.createObjectURL(file);
+    const tab = window.open(url, "_blank");
+
+    if (tab) {
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } else {
+        URL.revokeObjectURL(url);
+        alert("Дозвольте відкривати нові вкладки у браузері.");
+    }
+}
+
+ 
+
+function downloadFile(file, name) {
+    if (!file) {
+        alert("Файл відсутній.");
+        return;
+    }
+
+    const url = URL.createObjectURL(file);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = name || "document";
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+ 
+
+async function removeMaterial(id) {
+    if (!confirm("Видалити цей матеріал?")) return;
+
+    const all = await getUserMaterials();
+    const item = all.find(material => material.id === id);
+
+    if (!item || item.userId !== currentUser.id) return;
+
+    await deleteRecord("materials", id);
+
+    renderAll();
+}
+
+ 
+
+function createMaterialCard(item, showDelete = true) {
+
+    const card = document.createElement("div");
+    card.className = "material";
+
+    const title = document.createElement("h3");
+    title.textContent = item.title;
+
+    const badge = document.createElement("span");
+    badge.className = "badge";
+    badge.textContent = item.type;
+
+    const date = document.createElement("p");
+    date.textContent = "Дата: " + (item.date || "Не вказано");
+
+    const description = document.createElement("p");
+    description.textContent = item.description || "";
+
+    card.append(title, badge, date, description);
+
+    if (item.conference) {
+        const conference = document.createElement("p");
+        conference.textContent = "Конференція: " + item.conference;
+        card.appendChild(conference);
+    }
+
+    if (item.section) {
+        const section = document.createElement("p");
+        section.textContent = "Секція: " + item.section;
+        card.appendChild(section);
+    }
+
+    const actions = document.createElement("div");
+    actions.className = "file-actions";
+
+    if (item.file) {
+        const fileInfo = document.createElement("div");
+        fileInfo.className = "file-box";
+
+        const fileName = document.createElement("p");
+        fileName.textContent = "📎 " + item.fileName;
+
+        const view = document.createElement("button");
+        view.className = "secondary";
+        view.textContent = "Переглянути";
+        view.onclick = () => openFile(item.file);
+
+        const download = document.createElement("button");
+        download.className = "secondary";
+        download.textContent = "Завантажити";
+        download.onclick = () =>
+            downloadFile(item.file, item.fileName);
+
+        fileInfo.append(fileName, view, download);
+        card.appendChild(fileInfo);
+    }
+
+    if (item.certificate) {
+        const certBox = document.createElement("div");
+        certBox.className = "certificate-box";
+
+        const certTitle = document.createElement("strong");
+        certTitle.textContent = "🏅 Сертифікат учасника";
+
+        const certName = document.createElement("p");
+        certName.textContent = item.certificateName;
+
+        const viewCert = document.createElement("button");
+        viewCert.className = "secondary";
+        viewCert.textContent = "Переглянути сертифікат";
+        viewCert.onclick = () => openFile(item.certificate);
+
+        const downloadCert = document.createElement("button");
+        downloadCert.className = "secondary";
+        downloadCert.textContent = "Завантажити";
+        downloadCert.onclick = () =>
+            downloadFile(item.certificate, item.certificateName);
+
+        certBox.append(
+            certTitle,
+            certName,
+            viewCert,
+            downloadCert
+        );
+
+        card.appendChild(certBox);
+    }
+
+    if (showDelete) {
+        const remove = document.createElement("button");
+        remove.className = "secondary";
+        remove.textContent = "Видалити";
+        remove.onclick = () => removeMaterial(item.id);
+
+        actions.appendChild(remove);
+    }
+
+    card.appendChild(actions);
+
+    return card;
+}
+
+ 
+
+function renderList(containerId, items, emptyText) {
+    const container = document.getElementById(containerId);
+    container.replaceChildren();
+
+    if (items.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = emptyText;
+
+        container.appendChild(empty);
+        return;
+    }
+
+    items.forEach(item => {
+        container.appendChild(createMaterialCard(item));
+    });
+}
+
+ 
+
+async function renderAll() {
+    if (!currentUser) return;
+
+    const items = await getUserMaterials();
+
+    const works = items.filter(item => item.type === "Робота");
+
+    const science = items.filter(
+        item => item.type === "Наукова діяльність"
+    );
+
+    const certificates = items.filter(
+        item => item.type === "Сертифікат"
+    );
+
+    const projects = items.filter(
+        item => item.type === "Проєкт" || item.type === "Практика"
+    );
+
+    const linkedCertificates = items.filter(item => item.certificate);
+
+    worksCount.textContent = works.length;
+    certCount.textContent = certificates.length + linkedCertificates.length;
+    projectsCount.textContent = projects.length;
+
+    renderList(
+        "recentMaterials",
+        items.slice(0, 5),
+        "Поки що матеріалів немає."
+    );
+
+    renderList(
+        "worksList",
+        works,
+        "Тут поки немає навчальних робіт."
+    );
+
+    renderList(
+        "scienceList",
+        science,
+        "Тут поки немає наукових матеріалів."
+    );
+
+    renderList(
+        "certificatesList",
+        certificates,
+        "Тут поки немає окремих сертифікатів."
+    );
+
+    renderList(
+        "projectsList",
+        projects,
+        "Тут поки немає проєктів."
+    );
+
+    renderList(
+        "portfolioList",
+        items,
+        "Твоє портфоліо поки порожнє."
+    );
+}
+
+ 
+
+profileForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const name = profileName.value.trim();
+    const surname = profileSurname.value.trim();
+
+    if (!name || !surname) {
+        alert("Заповніть усі поля.");
+        return;
+    }
+
+    const users = await getAll("users");
+
+    const conflict = users.some(user =>
+        user.id !== currentUser.id &&
+        user.surname.toLowerCase() === surname.toLowerCase()
+    );
+
+    if (conflict) {
+        alert("Таке прізвище вже використовується іншим акаунтом.");
+        return;
+    }
+
+    currentUser.name = name;
+    currentUser.surname = surname;
+
+    await saveRecord("users", currentUser);
+
+    updateUserInfo();
+
+    alert("Дані профілю оновлено.");
+});
+ 
+
+passwordForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const oldHash = await hashPassword(oldPassword.value);
+
+    if (oldHash !== currentUser.password) {
+        alert("Старий пароль введено неправильно.");
+        return;
+    }
+
+    if (newPassword.value.length < 8) {
+        alert("Новий пароль має містити мінімум 8 символів.");
+        return;
+    }
+
+    currentUser.password = await hashPassword(newPassword.value);
+
+    await saveRecord("users", currentUser);
+
+    passwordForm.reset();
+
+    alert("Пароль успішно змінено.");
+});
+
+</script>
+
 </body>
 </html>
